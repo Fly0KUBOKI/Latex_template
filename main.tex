@@ -1,0 +1,91 @@
+% !TEX program = lualatex
+% ===== レポートテンプレート =====
+% このテンプレートを使用してレポートを作成します
+% 各セクションのファイル（purpose.tex, method.tex等）を編集してください
+
+\documentclass[11pt]{ltjarticle}
+\usepackage{luatexja}
+
+% ===== 基本パッケージ =====
+\usepackage[margin=20truemm]{geometry}  % ページ余白の設定
+\usepackage{titlesec}                   % セクション見出しのカスタマイズ
+\usepackage{pdfpages}                   % PDFの挿入
+\usepackage{amssymb}                    % 数学記号
+\usepackage{amsmath}                    % 数式環境
+\usepackage{graphicx}                   % 画像の挿入
+\usepackage{float}                      % 図表の位置固定 [H]オプション
+\usepackage{url}                        % URLの表示
+\usepackage{xcolor}                     % 色の使用
+
+% ハイパーリンク（参照・URL）をPDF内でクリック可能にする
+\usepackage[hidelinks]{hyperref}
+
+% ===== 専門分野固有のパッケージ =====
+% 必要に応じて macros.tex から読み込むか、ここで直接指定
+
+% 単位を扱うためのパッケージ（必須）
+\usepackage{siunitx}
+% 使用例: \SI{10}{\kilo\ohm}, \SI{1.5}{\micro F}, \SI{100}{\celsius}
+
+% ===== 句読点の置換 =====
+% 、。で書いてプログラムで，．に置換する
+% これにより日本語入力のまま論文形式の句読点が使用できる
+\catcode`、=\active
+\protected\def、{，}
+\catcode`。=\active
+\protected\def。{．}
+
+% セクション書体の設定
+\titleformat*{\section}{\large\bfseries}
+\renewcommand{\baselinestretch}{1.2}  % 行間を1.2倍に設定
+
+% ===== 共通マクロ =====
+% 式・単位・分野別パッケージ読み込み
+\input{macros.tex}
+
+% ===== 列挙番号の設定 =====
+% enumerate環境の番号形式をカスタマイズ
+\renewcommand{\labelenumi}{(\arabic{enumi})}      % (1), (2), (3), ...
+\renewcommand{\labelenumii}{\arabic{enumii}.}     % 1., 2., 3., ...
+\renewcommand{\labelenumiii}{\roman{enumiii}.}    % i., ii., iii., ...
+\renewcommand{\labelenumiv}{\alph{enumiv}.}       % a., b., c., ...
+
+% ===== 参考文献の設定 =====
+\makeatletter
+\DeclareRobustCommand
+\cite{\unskip \@ifnextchar [{\@tempswatrue\@citex}{\@tempswafalse\@citex[]} }
+% 上付きの番号（例: 1)）で出力するための定義
+\def\@cite#1#2{\textsuperscript{#1\if@tempswa , #2\fi)}}
+\makeatother
+
+% 参考文献のラベルを '1)' の形式にする
+\makeatletter
+\renewcommand\@biblabel[1]{#1)}
+\makeatother
+
+\renewcommand{\refname}{参考文献}
+
+
+% ===== ドキュメント本体 =====
+\begin{document}
+
+% ===== 表紙 =====
+\input{frontcover.tex}
+% 表紙PDFがある場合は下のコメントを外して使用
+% \includepdf{"frontcover.pdf"}
+
+% ===== セクション本文 =====
+% 必要なセクションのみ \input してください
+% 不要なセクションは行頭に % を付けてコメントアウト
+
+% \input{sections.tex}      % 実験概要・装置材料（必要に応じて）
+\input{purpose.tex}         % 目的
+\input{principle.tex}       % 原理
+\input{method.tex}          % 実験方法
+\input{result.tex}          % 結果
+\input{consideration.tex}   % 考察
+\input{assignment.tex}      % 課題
+\input{conclusion.tex}      % 結論
+\input{references.tex}      % 参考文献
+
+\end{document}

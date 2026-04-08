@@ -1,0 +1,53 @@
+% 共通マクロ集（レポートテンプレート用）
+% 必要に応じてプロジェクトごとに上書き・拡張してください。
+
+% ===== siunitx の設定 =====
+% 単位・数値表示のための設定（siunitx は main.tex 側で読み込まれている前提）
+\sisetup{detect-all=true, separate-uncertainty=true}
+
+% ===== 参照用ショートカット =====
+% 図・表・式を参照する際に使用
+% 使用例: \figref{fig:example} → 図\ref{fig:example}
+\newcommand{\figref}[1]{図\ref{#1}}
+\newcommand{\tabref}[1]{表\ref{#1}}
+\newcommand{\eqnref}[1]{式(\ref{#1})}
+
+% ===== 注記用マクロ =====
+\newcommand{\mynote}[1]{\textbf{[注]}\,\textit{#1}}
+
+% ===== 図のキャプションや浮動体の共通スタイル =====
+% 必要に応じてキャプションのフォーマットを設定
+% 例: \usepackage{caption}
+%     \captionsetup{font=small, labelfont=bf}
+
+% ===== フロントマター用マクロ =====
+% 表紙に埋め込む情報を簡単に更新するためのマクロ
+\newcommand{\ReportTitle}{レポートタイトルをここに記入}
+\newcommand{\ReportSubtitle}{実験テーマ・解析対象・副題など}
+\newcommand{\ReportCourse}{講義名／実験名}
+\newcommand{\ReportDepartment}{化学物理工学科}
+\newcommand{\ReportClass}{3年}
+\newcommand{\ReportStudentID}{24264027}
+\newcommand{\ReportAuthor}{久保木 琢真}
+\newcommand{\ReportCollaborators}{共同実験者なし}
+\newcommand{\ReportSupervisor}{担当教員名}
+\newcommand{\ReportInstitution}{東京農工大学 工学部 化学物理工学科}
+\newcommand{\ReportDate}{\today}
+
+% ===== 分野別パッケージ =====
+% 必要に応じて以下のコメントを外してパッケージを読み込む
+
+% 化学式が必要な場合:
+% \usepackage[version=4]{mhchem}
+% 使用例: \ce{H2O}, \ce{CO2}
+
+% 回路図が必要な場合:
+% \usepackage{circuitikz}
+
+% 化学構造式が必要な場合:
+% \usepackage{chemfig}
+
+% ===== カスタムコマンド例 =====
+% プロジェクトに応じて独自のコマンドを定義できます
+% 例: \newcommand{\diff}{\mathrm{d}}  % 微分記号
+%     \newcommand{\subA}{実験A}  % サブセクション名の統一
