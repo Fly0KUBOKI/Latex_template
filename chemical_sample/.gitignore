@@ -1,0 +1,12 @@
+# Ignore everything
+*
+
+# Allow git to recurse into directories
+!*/
+
+# Allow TeX files anywhere
+!*.tex
+!**/*.tex
+
+# Keep this gitignore tracked
+!.gitignore

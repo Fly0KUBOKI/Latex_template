@@ -1,0 +1,70 @@
+% !TEX program = lualatex
+% ===== レポートテンプレート =====
+% このテンプレートを使用してレポートを作成します
+% 各セクションのファイル（purpose.tex, method.tex等）を編集してください
+
+\documentclass[11pt]{ltjarticle}
+\usepackage{luatexja}
+
+% ===== 基本パッケージ =====
+\usepackage[margin=20truemm]{geometry}
+\usepackage{titlesec}
+\usepackage{pdfpages}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{url}
+\usepackage{xcolor}
+\usepackage[hidelinks]{hyperref}
+
+% ===== 専門分野固有のパッケージ =====
+\usepackage{siunitx}
+\usepackage[version=4]{mhchem}
+\usepackage{chemfig}
+
+% ===== 句読点の置換 =====
+\catcode`、=\active
+\protected\def、{，}
+\catcode`。=\active
+\protected\def。{．}
+
+% セクション書体の設定
+\titleformat*{\section}{\large\bfseries}
+\renewcommand{\baselinestretch}{1.2}
+
+% ===== 共通マクロ =====
+\input{macros.tex}
+
+% ===== 列挙番号の設定 =====
+\renewcommand{\labelenumi}{(\arabic{enumi})}
+\renewcommand{\labelenumii}{\arabic{enumii}.}
+\renewcommand{\labelenumiii}{\roman{enumiii}.}
+\renewcommand{\labelenumiv}{\alph{enumiv}.}
+
+% ===== 参考文献の設定 =====
+\makeatletter
+\DeclareRobustCommand
+\cite{\unskip \@ifnextchar [{\@tempswatrue\@citex}{\@tempswafalse\@citex[]} }
+\def\@cite#1#2{\textsuperscript{#1\if@tempswa , #2\fi)}}
+\makeatother
+
+\makeatletter
+\renewcommand\@biblabel[1]{#1)}
+\makeatother
+
+\renewcommand{\refname}{参考文献}
+
+\begin{document}
+
+\input{frontcover.tex}
+\input{purpose.tex}
+\input{principle.tex}
+\input{method.tex}
+\input{result.tex}
+\input{consideration.tex}
+\input{assignment.tex}
+\input{conclusion.tex}
+\input{references.tex}
+
+\end{document}

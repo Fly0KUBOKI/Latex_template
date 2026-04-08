@@ -1,0 +1,30 @@
+\section{原理}
+本実験では，サリチル酸のフェノール性ヒドロキシ基を無水酢酸でアセチル化し，アセチルサリチル酸を得る．反応式を式\eqnref{eq:aspirin-synthesis}に示す\cite{sample1}．
+
+\begin{equation}
+\ce{C7H6O3 + (CH3CO)2O -> C9H8O4 + CH3COOH}
+\label{eq:aspirin-synthesis}
+\end{equation}
+
+この反応は酸触媒下で進行し，サリチル酸 1 mol からアセチルサリチル酸 1 mol が生成するため，収率計算ではサリチル酸を制限試薬として扱うことができる．
+サリチル酸の物質量を $n_{\mathrm{SA}}$，アセチルサリチル酸のモル質量を $M_{\mathrm{ASA}}$ とすると，理論収量 $m_{\mathrm{theo}}$ は式\eqnref{eq:yield}で表される．
+
+\begin{equation}
+ m_{\mathrm{theo}} = n_{\mathrm{SA}} \times M_{\mathrm{ASA}}
+\label{eq:yield}
+\end{equation}
+
+サリチル酸とアセチルサリチル酸はいずれもベンゼン環を持つ芳香族化合物であり，置換基の違いによって性質が変化する．
+
+\begin{figure}[H]
+    \centering
+    \schemestart
+    \chemfig[atom sep=1.55em]{[:30]*6(-=-(-COOH)=-(-OH)-)}
+    \arrow{->[\ce{(CH3CO)2O}][\ce{H2SO4}]}
+    \chemfig[atom sep=1.55em]{[:30]*6(-=-(-COOH)=-(-OCOCH_3)-)}
+    \schemestop
+    \caption{サリチル酸からアセチルサリチル酸への変換}
+    \label{fig:aspirin-ring}
+\end{figure}
+
+生成物のアセチルサリチル酸は，未反応のサリチル酸よりも水に溶けにくく，再結晶によって精製しやすい．そのため，反応後に水を加えて析出させた後，エタノールと水の混合溶媒で再結晶することで純度を高めることができる．
