@@ -1,0 +1,87 @@
+\section{結果}
+
+\subsection{温度特性測定}
+
+抵抗体の温度特性を調べるために，\SI{0}{\celsius}から\SI{100}{\celsius}の範囲で抵抗値を測定した．測定は室温\SI{23}{\celsius}，相対湿度50\%の環境で実施された．各温度での抵抗値を\tabref{tab:temperature}に示す．
+
+\begin{table}[H]
+    \centering
+    \caption{温度と抵抗値の関係}
+    \label{tab:temperature}
+    \begin{tabular}{cc}
+        \hline
+        温度 [$^\circ$C] & 抵抗値 [$\Omega$] \\
+        \hline
+        0 & 1000 \\
+        10 & 950 \\
+        20 & 900 \\
+        30 & 850 \\
+        40 & 800 \\
+        50 & 750 \\
+        60 & 700 \\
+        70 & 650 \\
+        80 & 600 \\
+        90 & 550 \\
+        100 & 500 \\
+        \hline
+    \end{tabular}
+\end{table}
+
+測定結果から，温度の上昇に伴い抵抗値が直線的に低下することが確認された．温度と抵抗値の関係を\figref{fig:temperature}に示す．線形フィッティング結果から温度係数は\SI{-5}{\ohm\per\celsius}であることが求められた（$R^2 = 0.9995$）．
+
+\begin{figure}[H]
+    \centering
+    \GraphTemperatureResponse
+    \caption{抵抗体の温度特性}
+    \label{fig:temperature}
+\end{figure}
+
+\subsection{周波数応答特性}
+
+供試体の周波数応答を測定するため，\SI{1}{\hertz}から\SI{10}{\kilo\hertz}の範囲で正弦波信号を印加し，出力ゲインを記録した．測定条件は印加電圧振幅\SI{1}{\volt}（RMS），測定温度\SI{25}{\celsius}とした．各周波数でのゲイン値を\tabref{tab:frequency}に示す．
+
+\begin{table}[H]
+    \centering
+    \caption{周波数応答測定結果}
+    \label{tab:frequency}
+    \begin{tabular}{ccc}
+        \hline
+        周波数 [Hz] & ゲイン & 位相 [$^\circ$] \\
+        \hline
+        1 & 0.95 & -5 \\
+        10 & 0.90 & -15 \\
+        100 & 0.75 & -35 \\
+        1000 & 0.45 & -65 \\
+        10000 & 0.15 & -85 \\
+        \hline
+    \end{tabular}
+\end{table}
+
+周波数の増加に伴いゲインが減少し，位相も遅れが増加する傾向を示した．周波数応答曲線を\figref{fig:frequency}に示す．対数周波数グラフから，およそ\SI{30}{\hertz}付近でゲインが初期値の70\%に低下することが確認され，この周波数がシステムの$-3$dB周波数に相当することが示唆される．
+
+\begin{figure}[H]
+    \centering
+    \GraphFrequencyResponse
+    \caption{周波数応答（ゲイン特性）}
+    \label{fig:frequency}
+\end{figure}
+
+\subsection{定量結果のまとめ}
+
+本実験で得られた主要な定量結果を\tabref{tab:summary}にまとめる．温度係数の負の値から，被測定体は負の温度係数を持つ材料であることが判明した．また，周波数応答からシステムの帯域幅がおおよそ\SI{30}{\hertz}程度であることが推定される．
+
+\begin{table}[H]
+    \centering
+    \caption{実験結果のまとめ}
+    \label{tab:summary}
+    \begin{tabular}{ll}
+        \hline
+        項目 & 値 \\
+        \hline
+        温度係数 & \SI{-5}{\ohm\per\celsius} \\
+        温度係数の決定係数 $R^2$ & 0.9995 \\
+        推定$-3$dB周波数 & \SI{\approx 30}{\hertz} \\
+        \SI{10}{\kilo\hertz}時のゲイン減衰 & 84\% \\
+        \hline
+    \end{tabular}
+\end{table}

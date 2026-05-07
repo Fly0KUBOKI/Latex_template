@@ -6,6 +6,18 @@
 \documentclass[11pt]{ltjarticle}
 \usepackage{luatexja}
 
+% ===== フォント設定 =====
+% 数式と数字に Times New Roman フォントを適用
+% 本文フォントはデフォルト（Latin Modern）を保持
+\usepackage{iftex}
+\ifluatex
+  % LuaTeX: mathptmx の代わりに直接フォント設定
+  \DeclareMathAlphabet{\mathrm}{OT1}{ptm}{m}{n}
+  \DeclareMathAlphabet{\mathnormal}{OML}{ptm}{m}{it}
+  \DeclareMathAlphabet{\mathbf}{OT1}{ptm}{bx}{n}
+  \DeclareMathAlphabet{\mathit}{OT1}{ptm}{m}{it}
+\fi
+
 % ===== 基本パッケージ =====
 \usepackage[margin=20truemm]{geometry}  % ページ余白の設定
 \usepackage{titlesec}                   % セクション見出しのカスタマイズ
@@ -42,6 +54,10 @@
 % ===== 共通マクロ =====
 % 式・単位・分野別パッケージ読み込み
 \input{macros.tex}
+
+% ===== グラフ設定 =====
+% figure.tex から pgfplots 設定とグラフマクロを読み込み
+\input{figure.tex}
 
 % ===== 列挙番号の設定 =====
 % enumerate環境の番号形式をカスタマイズ

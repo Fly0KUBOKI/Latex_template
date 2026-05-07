@@ -1,0 +1,37 @@
+% 表紙テンプレート
+% 理系レポート向けに必要項目をまとめた表紙です。
+
+\hypersetup{pageanchor=false}
+\begin{titlepage}
+    \centering
+
+    {\large \ReportInstitution \par}
+    \vspace{1.5cm}
+
+    {\Large \ReportCourse \par}
+    \vspace{0.8cm}
+
+    {\Huge\bfseries \ReportTitle \par}
+    \vspace{0.4cm}
+    {\large \ReportSubtitle \par}
+
+    \vspace{1.8cm}
+    \rule{0.8\textwidth}{0.6pt}
+    \vspace{1.8cm}
+
+    \renewcommand{\arraystretch}{1.5}
+    \begin{tabular}{p{0.28\textwidth}p{0.58\textwidth}}
+        提出日 & \ReportDate \\
+        所属 & \ReportDepartment \\
+        学年・クラス & \ReportClass \\
+        学籍番号 & \ReportStudentID \\
+        氏名 & \ReportAuthor \\
+        共同実験者 & \ReportCollaborators \\
+        担当教員 & \ReportSupervisor \\
+    \end{tabular}
+
+    \vfill
+
+    {\large 使用した試薬量，反応条件，収率および分析結果を明確に記録すること。\par}
+\end{titlepage}
+\hypersetup{pageanchor=true}

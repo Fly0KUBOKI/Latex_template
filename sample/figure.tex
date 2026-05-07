@@ -1,0 +1,149 @@
+% ===== グラフ設定ファイル =====
+% グラフに関するすべての設定とマクロをここに記述
+% main.tex から \input{figure_config.tex} で読み込まれます
+
+% ---- pgfplots/tikz 関連パッケージ ----
+\usepackage{pgfplots}
+\usepackage{pgfplotstable}
+\usepackage{tikz}
+\usepgfplotslibrary{fillbetween}
+
+% ---- グラフマーカーの定義 ----
+\pgfplotscreateplotcyclelist{reportcyclelist}{%
+    {black, mark=o, mark size=3.2pt, line width=0.9pt, mark options={draw=black, fill=none}},%
+    {black, mark=square, mark size=3.2pt, line width=0.9pt, mark options={draw=black, fill=none}},%
+    {black, mark=triangle, mark size=3.2pt, line width=0.9pt, mark options={draw=black, fill=none}},%
+    {black, mark=diamond, mark size=3.2pt, line width=0.9pt, mark options={draw=black, fill=none}},%
+    {black, mark=x, mark size=3.2pt, line width=0.9pt}%
+}
+
+% ---- グラフ全体の設定 ----
+\pgfplotsset{
+    compat=1.18,
+    every axis/.style={
+        width=10cm,
+        height=10cm,
+        axis lines=box,
+        axis line style={black, line width=1.0pt},
+        tick style={black, line width=0.8pt},
+        tick align=inside,
+        tick label style={font=\small},
+        label style={font=\small},
+        title style={font=\small\bfseries},
+        grid=none,
+        minor tick num=1,
+        scaled ticks=false,
+        legend cell align=left,
+        legend style={
+            draw=black,
+            fill=white,
+            fill opacity=0.85,
+            text opacity=1,
+            font=\small,
+            rounded corners=1pt,
+        },
+        cycle list name=reportcyclelist,
+    },
+    plot area/.style={width=10cm, height=10cm},
+    plot square/.style={width=10cm, height=10cm},
+    plot logx/.style={xmode=log},
+    plot logy/.style={ymode=log},
+    plot loglog/.style={xmode=log, ymode=log},
+    plot no grid/.style={grid=none},
+    fit line/.style={black, no marks, line width=1.1pt, on layer=axis foreground},
+    scatter points/.style={only marks, mark=o, mark size=3.2pt, mark options={draw=black, fill=none}, on layer=axis background},
+    line series/.style={line width=1.0pt},
+    area series/.style={fill opacity=0.18, on layer=axis background},
+}
+
+% ========================================
+% 補助マクロ
+% ========================================
+
+\newcommand{\PlotTable}[4][]{%
+    \addplot[scatter points, #1] table [x=#2, y=#3, col sep=comma] {#4};%
+}
+
+\newcommand{\PlotFitLine}[4]{%
+    % #1=slope, #2=intercept, #3=xmin, #4=xmax
+    \addplot[fit line] coordinates {(#3,{#1*(#3)+#2}) (#4,{#1*(#4)+#2})};%
+}
+
+% ========================================
+% グラフ定義（tikzpicture で描画）
+% 以下、各グラフをマクロ化して定義
+% ========================================
+
+% ---- 図1: 基本プロット ----
+\newcommand{\GraphBasicPlot}{%
+    \begin{tikzpicture}
+    \begin{axis}[
+        plot area,
+        title={電圧測定結果},
+        xlabel={時間 [s]},
+        ylabel={電圧 [V]},
+        legend style={at={(0.98,0.98)}, anchor=north east},
+    ]
+        \addplot[scatter points] coordinates {
+            (0, 0)
+            (1, 1.2)
+            (2, 2.1)
+            (3, 3.0)
+            (4, 3.8)
+            (5, 4.9)
+        };
+        \addlegendentry{測定値}
+
+        \addplot[fit line] coordinates {
+            (0, 0)
+            (5, 5.1)
+        };
+        \addlegendentry{近似直線}
+    \end{axis}
+    \end{tikzpicture}
+}
+
+% ---- 図2: 温度特性 ----
+\newcommand{\GraphTemperatureResponse}{%
+    \begin{tikzpicture}
+    \begin{axis}[
+        plot area,
+        title={抵抗の温度特性},
+        xlabel={温度 [$^\circ$C]},
+        ylabel={抵抗 [$\Omega$]},
+        legend style={at={(0.98,0.02)}, anchor=south east},
+    ]
+        \addplot[scatter points] table [x=temperature, y=resistance, col sep=comma] {data/temperature_response.csv};
+        \addlegendentry{実験値}
+
+        \addplot[fit line] coordinates {
+            (0, 1000)
+            (100, 500)
+        };
+        \addlegendentry{近似直線}
+    \end{axis}
+    \end{tikzpicture}
+}
+
+% ---- 図3: 周波数応答 ----
+\newcommand{\GraphFrequencyResponse}{%
+    \begin{tikzpicture}
+    \begin{axis}[
+        plot area,
+        title={周波数応答（ゲイン）},
+        xlabel={周波数 [Hz]},
+        ylabel={ゲイン},
+        xmode=log,
+        legend style={at={(0.98,0.02)}, anchor=south east},
+    ]
+        \addplot[scatter points] table [x=frequency, y=magnitude, col sep=comma] {data/frequency_response.csv};
+        \addlegendentry{測定値}
+
+        \addplot[fit line] coordinates {
+            (1, 0.95)
+            (10000, 0.15)
+        };
+        \addlegendentry{近似曲線}
+    \end{axis}
+    \end{tikzpicture}
+}
