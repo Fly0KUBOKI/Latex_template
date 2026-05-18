@@ -1,0 +1,751 @@
+% !TEX program = lualatex
+\documentclass[11pt]{ltjarticle}
+\usepackage{luatexja}
+\usepackage[margin=20truemm]{geometry}
+\usepackage{titlesec}
+\usepackage{pdfpages}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{url}
+\usepackage{xcolor}
+\usepackage[hidelinks]{hyperref}
+\usepackage{listings}
+\usepackage{tcolorbox}
+
+% 句読点の置換
+\catcode`、=\active
+\protected\def、{，}
+\catcode`。=\active
+\protected\def。{．}
+
+% セクション書体の設定
+\titleformat*{\section}{\large\bfseries}
+\renewcommand{\baselinestretch}{1.2}
+
+% コード表示の設定
+\lstset{
+  language={bash},
+  basicstyle=\ttfamily\small,
+  breaklines=true,
+  frame=single,
+  numberstyle=\tiny,
+  showstringspaces=false,
+  tabsize=2,
+  aboveskip=\medskipamount,
+  belowskip=\medskipamount,
+  backgroundcolor=\color{lightgray!20}
+}
+
+\title{Windows環境でのLaTeX環境構築ガイド}
+\author{経験者からのアドバイス}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\tableofcontents
+
+\newpage
+
+\section{はじめに}
+
+本ドキュメントは，Windows環境でLaTeXを使用してレポートを作成する際に必要な環境構築手順を説明します．
+
+このガイドは実際の運用経験に基づいており，以下を実現することを目標としています：
+
+\begin{itemize}
+  \item 日本語に対応した高品質なPDF出力
+  \item 複数のプリアンブルファイルと図表の効率的な管理
+  \item 自動化されたコンパイルプロセス
+  \item エラー処理と変更検出による効率化
+\end{itemize}
+
+\section{推奨構成}
+
+本ガイドで推奨する構成は以下の通りです：
+
+\begin{center}
+\begin{tabular}{ll}
+\hline
+\textbf{項目} & \textbf{詳細} \\
+\hline
+LaTex配布版 & TeX Live 2024以降 \\
+コンパイラ & LuaLaTeX \\
+エディタ & Visual Studio Code \\
+Python & 3.9以上（オプション：自動化用） \\
+OS & Windows 10 / 11 \\
+\hline
+\end{tabular}
+\end{center}
+
+\section{最小限のパッケージ構成}
+
+\subsection{実際の運用に必要なパッケージ}
+
+当テンプレートを使用する場合，以下のパッケージが\textbf{最小限必須}です：
+
+\begin{itemize}
+  \item \textbf{luatexja}：日本語組版（LuaTeXベース）
+  \item \textbf{geometry}：ページレイアウト設定
+  \item \textbf{titlesec}：セクション見出しのカスタマイズ
+  \item \textbf{amsmath, amssymb}：数式環境と数学記号
+  \item \textbf{graphicx}：画像の挿入
+  \item \textbf{float}：図表の位置固定 [H] オプション
+  \item \textbf{hyperref}：ハイパーリンク（参照・URL）
+  \item \textbf{siunitx}：単位と数値の表示
+  \item \textbf{pgfplots, tikz}：グラフ描画
+\end{itemize}
+
+\subsection{オプションパッケージ（分野別）}
+
+分野に応じて以下を追加します：
+
+\begin{itemize}
+  \item \textbf{化学分野}：mhchem（化学式），chemfig（構造式）
+  \item \textbf{電気・電子分野}：circuitikz（回路図）
+  \item \textbf{一般的な活用}：pdfpages（PDF挿入），url（URL表示），xcolor（色使用）
+\end{itemize}
+
+\subsection{TeX Liveの最小インストール戦略}
+
+TeX Liveのインストール時に以下の選択肢があります：
+
+\begin{enumerate}
+  \item \textbf{フルインストール（推奨）}
+    \begin{itemize}
+      \item すべてのパッケージをインストール
+      \item サイズ：約6〜7GB
+      \item 利点：追加パッケージ不要，スムーズな運用
+      \item 欠点：ディスク容量が大きい
+    \end{itemize}
+
+  \item \textbf{カスタムインストール（上級者向け）}
+    \begin{itemize}
+      \item 必要なパッケージのみを選択
+      \item サイズ：約2〜3GB（最小構成）
+      \item 利点：ディスク容量削減
+      \item 欠点：後から追加パッケージを導入する手間
+    \end{itemize}
+\end{enumerate}
+
+\textbf{推奨}：初めてのインストールは\textbf{フルインストール}を選択することをお勧めします．これにより，パッケージの依存関係に悩まされず，安定した運用が可能になります．
+
+\subsection{インストール後のパッケージ確認}
+
+TeX Liveをインストール後，以下のコマンドで必須パッケージがインストールされているか確認できます：
+
+\begin{lstlisting}[language=bash]
+# Windows PowerShellで実行
+& "C:\texlive\2024\bin\windows\tlmgr.bat" list --installed | `
+  Select-String "luatexja|geometry|titlesec|amsmath|amssymb"
+\end{lstlisting}
+
+各パッケージが表示されれば，インストール完了です．
+
+\section{インストール手順}
+
+\subsection{1. TeX Liveのインストール}
+
+TeX Liveは，LaTeXの完全な配布版です．日本語対応や多数のパッケージが含まれています．
+
+\subsubsection{ダウンロード}
+
+以下の方法でインストーラを取得します：
+
+\begin{enumerate}
+  \item \url{https://www.tug.org/texlive/acquire-netinstall.html} にアクセス
+  \item \texttt{install-tl-windows.exe} をダウンロード
+  \item インストーラを実行
+\end{enumerate}
+
+\subsubsection{インストール設定}
+
+実行時に表示されるダイアログで以下を確認します：
+
+\begin{itemize}
+  \item \textbf{言語選択}：Japanese を含める
+  \item \textbf{パッケージスキーム}：Full（全パッケージ）を推奨
+  \item \textbf{インストール先}：\texttt{C:\textbackslash texlive\textbackslash 2024}など
+  \item \textbf{オプション}：
+    \begin{itemize}
+      \item Ghostscript：有効にする（PDF処理用）
+      \item Perl：有効にする（スクリプト実行用）
+    \end{itemize}
+\end{itemize}
+
+インストール完了には時間がかかります（目安：30分～1時間）．
+
+\subsubsection{インストール後の確認}
+
+PowerShellで以下を実行し，インストール確認します：
+
+\begin{lstlisting}[language=bash]
+lualatex --version
+\end{lstlisting}
+
+バージョン情報が表示されればインストール成功です．
+
+\subsection{2. Visual Studio Codeのセットアップ}
+
+VS Codeは軽量で拡張機能が充実しており，LaTeX編集に最適です．
+
+\subsubsection{インストール}
+
+\begin{enumerate}
+  \item \url{https://code.visualstudio.com/} からVS Codeをダウンロード
+  \item インストーラを実行
+  \item デフォルト設定でインストール完了
+\end{enumerate}
+
+\subsubsection{必須拡張機能}
+
+VS Code内で以下の拡張機能をインストールします（拡張機能パネルで検索）：
+
+\begin{enumerate}
+  \item \textbf{LaTeX Workshop}（James Yu）
+    \begin{itemize}
+      \item LaTeX編集の主要拡張機能
+      \item シンタックスハイライト，コンパイル，プレビュー
+    \end{itemize}
+  \item \textbf{LaTeX language support}（Joseph Benden）
+    \begin{itemize}
+      \item 追加の言語サポート
+    \end{itemize}
+  \item \textbf{Japanese Language Pack}
+    \begin{itemize}
+      \item VS Codeのメニューを日本語化
+    \end{itemize}
+  \item \textbf{Code Spell Checker}
+    \begin{itemize}
+      \item スペル・文法チェック（オプション）
+    \end{itemize}
+\end{enumerate}
+
+\subsubsection{LaTeX Workshopの設定}
+
+VS Codeの \texttt{settings.json} に以下を追加します：
+
+\begin{lstlisting}[basicstyle=\ttfamily\tiny]
+"latex-workshop.latex.tools": [
+  {
+    "name": "lualatex",
+    "command": "lualatex",
+    "args": ["-interaction=nonstopmode", "-halt-on-error", "%DOC%"]
+  }
+],
+"latex-workshop.latex.recipes": [
+  {
+    "name": "lualatex",
+    "tools": ["lualatex"]
+  }
+],
+"latex-workshop.view.pdf.viewer": "external"
+\end{lstlisting}
+
+\subsection{3. Pythonのセットアップ（オプション）}
+
+自動コンパイルや変更検出を使用する場合，Pythonが必要です．
+
+\subsubsection{インストール}
+
+\begin{enumerate}
+  \item \url{https://www.python.org/} からPython 3.9以上をダウンロード
+  \item インストーラを実行
+  \item \textbf{重要}：「Add Python to PATH」をチェック
+\end{enumerate}
+
+\subsubsection{インストール確認}
+
+\begin{lstlisting}[language=bash]
+python --version
+pip --version
+\end{lstlisting}
+
+\section{ディレクトリ構造}
+
+レポートプロジェクトの推奨ディレクトリ構造は以下の通りです：
+
+\begin{lstlisting}[language=bash]
+my_report/
+├── main.tex          # メインファイル
+├── macros.tex        # マクロ定義（タイトル，著者等）
+├── figure.tex        # グラフ設定
+├── frontcover.tex    # 表紙
+├── purpose.tex       # 目的
+├── principle.tex     # 原理
+├── method.tex        # 実験方法
+├── result.tex        # 結果
+├── consideration.tex # 考察
+├── assignment.tex    # 課題
+├── conclusion.tex    # 結論
+├── references.tex    # 参考文献
+└── data/             # グラフデータ（CSVなど）
+    ├── temperature.csv
+    └── frequency.csv
+\end{lstlisting}
+
+\subsection{ファイルの役割}
+
+\begin{itemize}
+  \item \textbf{main.tex}：全体の統合ファイル，パッケージ読み込み，本文構成
+  \item \textbf{macros.tex}：レポートのメタ情報（タイトル，学籍番号，著者）とショートカット
+  \item \textbf{figure.tex}：グラフの定義，pgfplotsの設定
+  \item \textbf{各セクション*.tex}：本文内容（各セクションの詳細）
+\end{itemize}
+
+\section{基本的なLaTeX構文}
+
+\subsection{セクション構成}
+
+\begin{lstlisting}[language=bash, basicstyle=\ttfamily\tiny]
+\section{セクション名}      % 第1レベル
+\subsection{サブセクション}  % 第2レベル
+\subsubsection{副題}        % 第3レベル
+\end{lstlisting}
+
+\subsection{箇条書き}
+
+\begin{lstlisting}[language=bash, basicstyle=\ttfamily\tiny]
+% 番号なし
+\begin{itemize}
+  \item 項目1
+  \item 項目2
+\end{itemize}
+
+% 番号あり
+\begin{enumerate}
+  \item 項目1
+  \item 項目2
+\end{enumerate}
+\end{lstlisting}
+
+\subsection{数式}
+
+\begin{lstlisting}[language=bash, basicstyle=\ttfamily\tiny]
+% インライン数式
+$E = mc^2$
+
+% 別行立ち数式
+\begin{equation}
+  y = ax + b
+  \label{eq:linear}
+\end{equation}
+
+% 参照
+式(\ref{eq:linear})より ...
+\end{lstlisting}
+
+\subsection{図表の挿入}
+
+\begin{lstlisting}[language=bash, basicstyle=\ttfamily\tiny]
+% 図の挿入
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=8cm]{data/graph.png}
+  \caption{グラフのタイトル}
+  \label{fig:graph}
+\end{figure}
+
+% 参照
+\figref{fig:graph}に示す通り ...
+
+% 表の挿入
+\begin{table}[H]
+  \centering
+  \begin{tabular}{|c|c|}
+    \hline
+    項目1 & 項目2 \\
+    \hline
+    値1 & 値2 \\
+    \hline
+  \end{tabular}
+  \caption{表のタイトル}
+  \label{tab:table}
+\end{table}
+\end{lstlisting}
+
+\subsection{参考文献}
+
+\begin{lstlisting}[language=bash, basicstyle=\ttfamily\tiny]
+% 文中での引用
+\cite{参考文献ID}
+
+% references.tex での定義
+\begin{thebibliography}{99}
+  \bibitem{参考文献ID}
+  著者名, 「タイトル」, 発行元, 2024.
+\end{thebibliography}
+\end{lstlisting}
+
+\section{よくあるパッケージ}
+
+\subsection{化学分野}
+
+\begin{itemize}
+  \item \textbf{mhchem}：化学式表示
+    \begin{lstlisting}[language=bash, basicstyle=\ttfamily\small]
+\usepackage[version=4]{mhchem}
+\ce{H2O}, \ce{CO2 + H2O -> H2CO3}
+    \end{lstlisting}
+
+  \item \textbf{chemfig}：化学構造式
+    \begin{lstlisting}[language=bash, basicstyle=\ttfamily\small]
+\usepackage{chemfig}
+\chemfig{...}  % 化学構造式を描画
+    \end{lstlisting}
+\end{itemize}
+
+\subsection{電気・電子分野}
+
+\begin{itemize}
+  \item \textbf{circuitikz}：回路図
+    \begin{lstlisting}[language=bash, basicstyle=\ttfamily\small]
+\usepackage{circuitikz}
+\begin{circuitikz}
+  \draw (0,0) to[R] (2,0);
+\end{circuitikz}
+    \end{lstlisting}
+
+  \item \textbf{siunitx}：単位と数値の表示（既にmain.texに含まれている）
+    \begin{lstlisting}[language=bash, basicstyle=\ttfamily\small]
+\usepackage{siunitx}
+\SI{10}{\kilo\ohm}, \SI{1.5}{\micro\farad}
+    \end{lstlisting}
+\end{itemize}
+
+\subsection{グラフ描画}
+
+\begin{itemize}
+  \item \textbf{pgfplots}：科学技術計算グラフ（既にfigure.texに含まれている）
+  \item \textbf{tikz}：一般的な図形描画（既にfigure.texに含まれている）
+\end{itemize}
+
+\section{コンパイルと実行}
+
+\subsection{VS Codeでの実行}
+
+\begin{enumerate}
+  \item VS Codeで \texttt{main.tex} を開く
+  \item 左サイドバーの「TeX」アイコンをクリック
+  \item 「Build LaTeX project」をクリック
+  \item エラーなく完了すると \texttt{main.pdf} が生成される
+\end{enumerate}
+
+\subsection{コマンドラインでの実行}
+
+\begin{lstlisting}[language=bash]
+cd path/to/report
+lualatex -interaction=nonstopmode -halt-on-error main.tex
+\end{lstlisting}
+
+\subsection{Pythonスクリプトでの自動化}
+
+\texttt{compile.py} を使用すると，複数のレポートを効率的に管理できます：
+
+\begin{lstlisting}[language=bash]
+# config.json に報告書を登録
+python compile.py report_name
+
+# すべてのレポートをコンパイル
+python compile.py
+\end{lstlisting}
+
+\texttt{compile.py} の機能：
+
+\begin{itemize}
+  \item 変更ファイルの自動検出
+  \item スキップ（変更がない場合）
+  \item エラー分析と表示
+  \item 補助ファイルの自動クリーンアップ
+  \item PDFの自動リネーム（macros.texのメタ情報から）
+\end{itemize}
+
+\section{最小限構成での実運用}
+
+\subsection{最小限main.tex テンプレート}
+
+以下は，最小限のパッケージで動作するmain.texです：
+
+\begin{lstlisting}[basicstyle=\ttfamily\small]
+% !TEX program = lualatex
+\documentclass[11pt]{ltjarticle}
+\usepackage{luatexja}
+\usepackage[margin=20truemm]{geometry}
+\usepackage{titlesec}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage[hidelinks]{hyperref}
+\usepackage{siunitx}
+
+% 句読点の置換
+\catcode`、=\active
+\protected\def、{，}
+\catcode`。=\active
+\protected\def。{．}
+
+% セクション書体の設定
+\titleformat*{\section}{\large\bfseries}
+
+\title{レポートタイトル}
+\author{著者名}
+\date{\today}
+
+\begin{document}
+\maketitle
+\section{はじめに}
+\end{document}
+\end{lstlisting}
+
+このテンプレートで以下が可能です：
+
+\begin{itemize}
+  \item \textbf{日本語サポート}：luatexjaにより完全な日本語出力
+  \item \textbf{ページレイアウト}：20mmの余白設定
+  \item \textbf{数式環境}：amsmath, amssymbで数学記号を完全サポート
+  \item \textbf{画像挿入}：graphicx, floatで図表管理
+  \item \textbf{ハイパーリンク}：hyperrefで参照とURLをクリック可能に
+  \item \textbf{単位表示}：siunitxで標準化された単位表示
+\end{itemize}
+
+\subsection{グラフが不要な場合}
+
+pgfplotsやtikzを使用しない場合，figure.texファイルは最小化できます：
+
+\begin{lstlisting}[basicstyle=\ttfamily\small]
+% figure.tex（最小版）
+% グラフを使用しない場合は，このファイルを削除するか
+% main.tex の \input{figure.tex} をコメントアウト
+\end{lstlisting}
+
+\subsection{分野別の最小構成例}
+
+\subsubsection{化学分野}
+
+\begin{lstlisting}[basicstyle=\ttfamily\small]
+% 化学式が必要な場合のみ追加
+\usepackage[version=4]{mhchem}
+
+% 使用例
+\ce{H2O}, \ce{CO2 + H2O -> H2CO3}
+\end{lstlisting}
+
+\subsubsection{電気・電子分野}
+
+\begin{lstlisting}[basicstyle=\ttfamily\small]
+% 回路図が必要な場合のみ追加
+\usepackage{circuitikz}
+
+% 使用例
+\begin{circuitikz}
+  \draw (0,0) to[R] (2,0);
+\end{circuitikz}
+\end{lstlisting}
+
+\section{トラブルシューティング}
+
+\subsection{文字化けが発生する}
+
+\textbf{症状}：日本語が正しく表示されない
+
+\textbf{対策}：
+
+\begin{enumerate}
+  \item \texttt{main.tex} の先頭を確認：
+    \begin{lstlisting}[language=bash, basicstyle=\ttfamily\small]
+% !TEX program = lualatex
+\documentclass[11pt]{ltjarticle}
+\usepackage{luatexja}
+    \end{lstlisting}
+  \item ファイルのエンコーディングがUTF-8であることを確認
+  \item VS Codeの右下で「UTF-8」が表示されていることを確認
+\end{enumerate}
+
+\subsection{パッケージが見つからない}
+
+\textbf{症状}：\texttt{Package not found} エラー
+
+\textbf{対策}：
+
+\begin{enumerate}
+  \item TeX Liveを完全インストール（Full）しているか確認
+  \item パッケージ名の綴りを確認
+  \item 必要に応じてTeX Liveを更新：
+    \begin{lstlisting}[language=bash]
+tlmgr update --self --all
+    \end{lstlisting}
+\end{enumerate}
+
+\subsection{グラフが表示されない}
+
+\textbf{症状}：グラフやCSVデータが反映されない
+
+\textbf{対策}：
+
+\begin{enumerate}
+  \item \texttt{data/} ディレクトリが正しい位置にあるか確認
+  \item CSVファイルが正しい形式か確認（カンマ区切り）
+  \item \texttt{figure.tex} のパスが相対パスになっているか確認
+\end{enumerate}
+
+\subsection{コンパイルが異常に遅い}
+
+\textbf{症状}：LuaLaTeXの実行に時間がかかる
+
+\textbf{対策}：
+
+\begin{enumerate}
+  \item 不要なパッケージを \texttt{main.tex} から削除
+  \item \texttt{pgfplots} の図が多くないか確認
+  \item キャッシュをクリア：
+    \begin{lstlisting}[language=bash]
+rm -f *.aux *.log *.pdf *.out
+    \end{lstlisting}
+\end{enumerate}
+
+\section{応用：マクロの活用}
+
+\subsection{カスタムコマンド定義}
+
+\texttt{macros.tex} にカスタムコマンドを定義することで，書き込みを効率化できます：
+
+\begin{lstlisting}[language=bash, basicstyle=\ttfamily\small]
+% 微分演算子
+\newcommand{\diff}{\mathrm{d}}
+
+% 全微分
+\newcommand{\D}[1]{\frac{\diff#1}{\diff x}}
+
+% 二重括弧
+\newcommand{\norm}[1]{\left\lVert#1\right\rVert}
+
+% 部分文字
+\newcommand{\mysubA}{実験グループA}
+\end{lstlisting}
+
+使用例：
+
+\begin{lstlisting}[language=bash, basicstyle=\ttfamily\small]
+本実験では\mysubA{}の結果を分析した．
+導関数は $\D{y}$ で表される．
+\end{lstlisting}
+
+\subsection{条件分岐}
+
+異なるバージョンのレポートを管理する場合：
+
+\begin{lstlisting}[language=bash, basicstyle=\ttfamily\small]
+% macros.tex で定義
+\newif\ifEnglish
+\Englishfalse  % false: 日本語, true: 英語
+
+% main.tex で使用
+\ifEnglish
+  \section{Introduction}
+\else
+  \section{はじめに}
+\fi
+\end{lstlisting}
+
+\section{フロー図：環境構築手順}
+
+以下は環境構築全体のフロー図です：
+
+\begin{enumerate}
+  \item \textbf{準備フェーズ}
+    \begin{enumerate}
+      \item TeX Liveをダウンロード
+      \item VS Codeをダウンロード
+      \item Python（オプション）をダウンロード
+    \end{enumerate}
+
+  \item \textbf{インストールフェーズ}
+    \begin{enumerate}
+      \item TeX Liveをインストール（フルインストール）
+      \item VS Codeをインストール
+      \item Pythonをインストール（PATH設定有効）
+    \end{enumerate}
+
+  \item \textbf{設定フェーズ}
+    \begin{enumerate}
+      \item VS Code拡張機能をインストール
+      \item \texttt{settings.json} を設定
+      \item テストファイルでコンパイルテスト
+    \end{enumerate}
+
+  \item \textbf{運用フェーズ}
+    \begin{enumerate}
+      \item テンプレートをコピー
+      \item \texttt{macros.tex} を編集
+      \item VS Codeで編集・コンパイル
+    \end{enumerate}
+\end{enumerate}
+
+\section{インストール済みパッケージの確認と削減}
+
+\subsection{インストール済みパッケージの一覧表示}
+
+TeX Liveにインストールされているパッケージ一覧を表示します：
+
+\begin{lstlisting}[language=bash]
+# PowerShellで実行
+& "C:\texlive\2024\bin\windows\tlmgr.bat" list --only-installed > installed_packages.txt
+\end{lstlisting}
+
+\subsection{不要なパッケージの削除}
+
+インストール済みパッケージが不要な場合は削除できます：
+
+\begin{lstlisting}[language=bash]
+# 個別パッケージの削除
+& "C:\texlive\2024\bin\windows\tlmgr.bat" remove package_name
+
+# 例：汎用計画言語パッケージの削除
+& "C:\texlive\2024\bin\windows\tlmgr.bat" remove metapost
+\end{lstlisting}
+
+\textbf{注意}：パッケージの削除時は，依存関係を確認してから実行してください．
+
+\subsection{ディスク容量の見積}
+
+\begin{itemize}
+  \item \textbf{TeX Live フルインストール}：約6〜7GB
+  \item \textbf{最小限の構成}（luatexja + 基本パッケージ）：約2GB
+  \item \textbf{当テンプレート運用に必要}：約3GB
+\end{itemize}
+
+\subsection{Windows での容量確認}
+
+\begin{lstlisting}[language=bash]
+# PowerShell で TeX Live フォルダのサイズ確認
+(Get-ChildItem "C:\texlive" -Recurse |
+  Measure-Object -Property Length -Sum).Sum / 1GB
+\end{lstlisting}
+
+\section{参考リンク}
+
+\begin{itemize}
+  \item TeX Live公式：\url{https://www.tug.org/texlive/}
+  \item LaTeX Workshop：\url{https://github.com/James-Yu/LaTeX-Workshop}
+  \item 日本語LaTeX環境：\url{https://www.latex.or.jp/}
+  \item pgfplotsマニュアル：\url{https://pgfplots.sourceforge.io/}
+\end{itemize}
+
+\section{まとめ}
+
+本ドキュメントで紹介した環境構築により，以下を実現できます：
+
+\begin{itemize}
+  \item \textbf{効率的な執筆}：テンプレートとマクロによる統一化
+  \item \textbf{高品質な出力}：LuaLaTeXと最新パッケージによる最適化
+  \item \textbf{自動化}：Pythonスクリプトによる管理
+  \item \textbf{保守性}：段階的なファイル分割で可読性向上
+\end{itemize}
+
+環境構築後は，テンプレートを活用して効率的なレポート作成を進めてください．
+
+\end{document}

@@ -1,0 +1,19 @@
+{
+  "reports": {
+    "環境構築": {
+      "pdf_name": "LaTeX環境構築ガイド_Windows版.pdf"
+    }
+  },
+  "global": {
+    "compiler": "lualatex",
+    "compiler_options": "-interaction=nonstopmode -halt-on-error",
+    "cleanup_on_success": true,
+    "cleanup_extensions": [
+      "aux",
+      "log",
+      "out",
+      "gz",
+      "toc"
+    ]
+  }
+}
